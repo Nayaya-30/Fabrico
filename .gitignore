@@ -64,6 +64,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # env files
+.env
+.env.local
 .env.development.local
 .env.test.local
 .env.production.local
@@ -77,3 +79,49 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN3dmJ6cmFjeHZ0Y2Z1dHhlZGdoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU3NTM2MTEsImV4cCI6MjA4MTMyOTYxMX0.CLr7eLJesgmLeghV8OGIWsvqiGdzPpRfGZCdkdlvi8w
+NEXT_PUBLIC_SUPABASE_URL=https://cwvbzracxvtcfutxedgh.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=sb_publishable_04l_4N9kqGbBWzZaUpYIVQ_ce6By5EV
+
+DEEPSEEK_RESUMIND_API_KEY=sk-b587987c32334006bf9c9581d66cb7e9
+DEEPSEEK_FEMENTOR_API_KEY=sk-2685638eee594b94af5c858c09c334dd
+
+
+
+# Deployment used by `npx convex dev`
+CONVEX_DEPLOYMENT=dev:amicable-dodo-539 # team: yusuf-bashir-nayaya, project: tailor-manager
+
+NEXT_PUBLIC_CONVEX_URL=https://amicable-dodo-539.convex.cloud
+
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_cGVyZmVjdC10b21jYXQtNy5jbGVyay5hY2NvdW50cy5kZXYk
+CLERK_SECRET_KEY=sk_test_pDYlPZNWGGSClrbYNMZRGZfi5pk6pSybEwhSvNRCZS
+CLERK_WEBHOOK_SECRET=whsec_N2HuXUyz23eBz+lMIYUjXVLyIM7Ld8fW
+
+# Clerk URLs
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding
+
+
+# Payment Providers
+PAYSTACK_SECRET_KEY=sk_test_xxxxx
+PAYSTACK_PUBLIC_KEY=pk_test_xxxxx
+FLUTTERWAVE_SECRET_KEY=FLWSECK_TEST-xxxxx
+FLUTTERWAVE_PUBLIC_KEY=FLWPUBK_TEST-xxxxx
+FLUTTERWAVE_SECRET_HASH=your_secret_hash
+STRIPE_SECRET_KEY=sk_test_xxxxx
+STRIPE_PUBLIC_KEY=pk_test_xxxxx
+
+# App Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NODE_ENV=development
+
+# Email Service (Optional)
+SENDGRID_API_KEY=your_sendgrid_key
+
+# SMS Service (Optional)
+TWILIO_ACCOUNT_SID=your_twilio_sid
+TWILIO_AUTH_TOKEN=your_twilio_token
+TWILIO_PHONE_NUMBER=your_twilio_phone
