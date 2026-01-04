@@ -150,9 +150,10 @@ export default function NewStylePage() {
                   <Input
                     type="number"
                     value={formData.estimatedHours}
-                    onChange={(e) =>
-                      setFormData({ ...formData, estimatedHours: parseFloat(e.target.value) })
-                    }
+                    onChange={(e) => {
+                      const v = parseFloat(e.target.value);
+                      setFormData({ ...formData, estimatedHours: isNaN(v) ? 0 : v });
+                    }}
                     min="0"
                     step="0.5"
                     required
@@ -164,9 +165,10 @@ export default function NewStylePage() {
                   <Input
                     type="number"
                     value={formData.basePrice}
-                    onChange={(e) =>
-                      setFormData({ ...formData, basePrice: parseFloat(e.target.value) })
-                    }
+                    onChange={(e) => {
+                      const v = parseFloat(e.target.value);
+                      setFormData({ ...formData, basePrice: isNaN(v) ? 0 : v });
+                    }}
                     min="0"
                     required
                   />

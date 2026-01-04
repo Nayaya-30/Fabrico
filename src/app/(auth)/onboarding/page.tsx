@@ -56,6 +56,13 @@ export default function OnboardingPage() {
     },
   ];
 
+  const roleTextColorMap: Record<typeof roles[number]["value"], string> = {
+    customer: "text-blue-500",
+    worker: "text-green-500",
+    manager: "text-purple-500",
+    admin: "text-red-500",
+  };
+
   const handleSubmit = async () => {
     if (!user) return;
 
@@ -176,10 +183,8 @@ export default function OnboardingPage() {
                               : "border-border hover:border-primary/50"
                           }`}
                         >
-                          <div
-                            className={`h-12 w-12 rounded-lg ${role.color} bg-opacity-10 flex items-center justify-center mb-4`}
-                          >
-                            <Icon className={`h-6 w-6 text-${role.color.replace("bg-", "")}`} />
+                          <div className={`h-12 w-12 rounded-lg ${role.color} bg-opacity-10 flex items-center justify-center mb-4`}>
+                            <Icon className={`h-6 w-6 ${roleTextColorMap[role.value]}`} />
                           </div>
                           <h3 className="font-semibold mb-1">{role.title}</h3>
                           <p className="text-sm text-muted-foreground">

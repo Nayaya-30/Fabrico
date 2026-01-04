@@ -11,11 +11,12 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, ShoppingBag } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 
 export default function NewOrderPage() {
   const { user } = useUser();
+  const router = useRouter();
   const clerkId = user?.id ?? "";
   const searchParams = useSearchParams();
   const styleId = searchParams.get("styleId");
@@ -64,7 +65,7 @@ export default function NewOrderPage() {
         customerNotes: customerNotes || undefined,
       });
 
-      window.location.href = `/customer/orders/${result.orderId}`;
+      router.push(`/customer/orders/${result.orderId}`);
     } catch (error) {
       console.error("Failed to create order:", error);
       alert("Failed to create order");

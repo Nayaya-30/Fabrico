@@ -1,4 +1,3 @@
-
 // app/(dashboard)/layout.tsx
 "use client";
 
@@ -6,7 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function DashboardLayoutWrapper({
 	children,
@@ -14,6 +13,7 @@ export default function DashboardLayoutWrapper({
 	children: React.ReactNode;
 }) {
 	const { user, isLoaded } = useUser();
+	const router = useRouter();
 	const convexUser = useQuery(
 		api.auth.getCurrentUser,
 		user ? { clerkId: user.id } : "skip"
@@ -23,8 +23,11 @@ export default function DashboardLayoutWrapper({
 		return <div>Loading...</div>;
 	}
 
-	if (!user) {
-		redirect("/sign-in");
+	if (isLoaded && !user) {
+		setTimeout(() => {
+			router.replace("/sign-in");
+		}, 0);
+		return null;
 	}
 
 	if (!convexUser) {

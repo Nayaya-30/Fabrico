@@ -1,12 +1,14 @@
 'use client'
 
 import { Component, ReactNode } from 'react'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 
 interface Props {
   children: ReactNode
   fallback?: ReactNode
+  navigate?: (path: string) => void
 }
 
 interface State {
@@ -69,7 +71,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </Button>
               <Button
                 variant="outline"
-                onClick={() => window.location.href = '/'}
+                onClick={() => this.props.navigate ? this.props.navigate('/') : window.location.assign('/')}
               >
                 Go Home
               </Button>
@@ -107,4 +109,9 @@ export function ErrorDisplay({
       )}
     </div>
   )
+}
+
+export function ErrorBoundaryWithRouter(props: Omit<Props, 'navigate'>) {
+  const router = useRouter()
+  return <ErrorBoundary {...props} navigate={(path) => router.push(path)} />
 }

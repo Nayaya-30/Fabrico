@@ -1,12 +1,16 @@
 
 // app/api/webhooks/flutterwave/route.ts
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 
 export async function POST(req: NextRequest) {
   try {
     const secretHash = req.headers.get("verif-hash");
-
-    if (!secretHash || secretHash !== process.env.FLUTTERWAVE_SECRET_HASH) {
+    const expected = process.env.FLUTTERWAVE_SECRET_HASH || "";
+    const provided = secretHash || "";
+    const a = Buffer.from(expected);
+    const b = Buffer.from(provided);
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
