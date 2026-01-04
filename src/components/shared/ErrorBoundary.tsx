@@ -63,10 +63,8 @@ export class ErrorBoundary extends Component<Props, State> {
             )}
 
             <div className="flex gap-3 justify-center">
-              <Button
-                onClick={() => window.location.reload()}
-                leftIcon={<RefreshCw className="h-4 w-4" />}
-              >
+              <Button onClick={() => window.location.reload()}>
+                <RefreshCw className="h-4 w-4 mr-2" />
                 Refresh Page
               </Button>
               <Button
@@ -103,7 +101,8 @@ export function ErrorDisplay({
       <h3 className="text-xl font-bold text-gray-900 mb-2">{title}</h3>
       <p className="text-gray-600 mb-6">{message}</p>
       {retry && (
-        <Button onClick={retry} leftIcon={<RefreshCw className="h-4 w-4" />}>
+        <Button onClick={retry}>
+          <RefreshCw className="h-4 w-4 mr-2" />
           Try Again
         </Button>
       )}
