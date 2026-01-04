@@ -2,7 +2,7 @@
     providers: [
     {
       "applicationID": "convex",
-      "domain": "https://your-app.clerk.accounts.dev"
+      "domain": "https://perfect-tomcat-7.clerk.accounts.dev"
     }
   ],
   };
