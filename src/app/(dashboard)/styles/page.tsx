@@ -3,12 +3,11 @@
 "use client";
 
 import { StyleFeed } from "@/components/styles/style-feed";
+import { useUser } from "@clerk/nextjs";
 
-interface StylesPageProps {
-  clerkId: string;
-}
-
-export default function StylesPage({ clerkId }: StylesPageProps) {
+export default function StylesPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   return (
     <div className="space-y-6">
       <div>
@@ -18,7 +17,7 @@ export default function StylesPage({ clerkId }: StylesPageProps) {
         </p>
       </div>
 
-      <StyleFeed clerkId={clerkId} />
+      {clerkId && <StyleFeed clerkId={clerkId} />}
     </div>
   );
 }

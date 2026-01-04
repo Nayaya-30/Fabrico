@@ -7,13 +7,12 @@ import { api } from "@/convex/_generated/api";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Clock, AlertCircle, ChevronRight, Package } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
-interface TasksPageProps {
-  clerkId: string;
-}
-
-export default function TasksPage({ clerkId }: TasksPageProps) {
-  const orders = useQuery(api.orders.getWorkerAssignedOrders, { clerkId });
+export default function TasksPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
+  const orders = useQuery(api.orders.getWorkerAssignedOrders, clerkId ? { clerkId } : "skip");
 
   const activeOrders = orders?.filter(
     (o) => o.status !== "delivered" && o.status !== "cancelled"

@@ -11,14 +11,13 @@ import { Input } from "@/components/ui/input";
 import { OrderCard } from "@/components/orders/order-card";
 import { Search, Plus, Package } from "lucide-react";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
-interface CustomerOrdersPageProps {
-  clerkId: string;
-}
-
-export default function CustomerOrdersPage({ clerkId }: CustomerOrdersPageProps) {
+export default function CustomerOrdersPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   const [searchQuery, setSearchQuery] = useState("");
-  const orders = useQuery(api.orders.getCustomerOrders, { clerkId });
+  const orders = useQuery(api.orders.getCustomerOrders, clerkId ? { clerkId } : "skip");
 
   const filteredOrders = orders?.filter((order) =>
     order.orderNumber.toLowerCase().includes(searchQuery.toLowerCase())

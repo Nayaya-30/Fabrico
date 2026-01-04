@@ -12,12 +12,11 @@ import { Input } from "@/components/ui/input";
 import { ArrowLeft, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 
-interface NewOrderPageProps {
-  clerkId: string;
-}
-
-export default function NewOrderPage({ clerkId }: NewOrderPageProps) {
+export default function NewOrderPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   const searchParams = useSearchParams();
   const styleId = searchParams.get("styleId");
 
@@ -29,8 +28,8 @@ export default function NewOrderPage({ clerkId }: NewOrderPageProps) {
   const [urgency, setUrgency] = useState<"standard" | "rush" | "express">("standard");
   const [customerNotes, setCustomerNotes] = useState("");
 
-  const styles = useQuery(api.styles.getStyles, { clerkId });
-  const measurements = useQuery(api.measurements.getMeasurementProfiles, { clerkId });
+  const styles = useQuery(api.styles.getStyles, clerkId ? { clerkId } : "skip");
+  const measurements = useQuery(api.measurements.getMeasurementProfiles, clerkId ? { clerkId } : "skip");
   const selectedStyle = useQuery(
     api.styles.getStyleById,
     selectedStyleId ? { styleId: selectedStyleId } : "skip"

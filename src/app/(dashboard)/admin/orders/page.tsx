@@ -12,16 +12,15 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Download, ChevronRight } from "lucide-react";
 import { OrderStatus } from "@/convex/schema";
+import { useUser } from "@clerk/nextjs";
 
-interface AdminOrdersPageProps {
-  clerkId: string;
-}
-
-export default function AdminOrdersPage({ clerkId }: AdminOrdersPageProps) {
+export default function AdminOrdersPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
 
-  const orders = useQuery(api.orders.getAllOrders, { clerkId });
+  const orders = useQuery(api.orders.getAllOrders, clerkId ? { clerkId } : "skip");
 
   const filteredOrders = orders?.filter((order) => {
     const matchesSearch = order.orderNumber

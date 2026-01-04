@@ -5,21 +5,20 @@
 import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, ChevronRight } from "lucide-react";
 import { OrderStatus } from "@/convex/schema";
 
-interface AllOrdersPageProps {
-  clerkId: string;
-}
-
-export default function AllOrdersPage({ clerkId }: AllOrdersPageProps) {
+export default function AllOrdersPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
   
-  const orders = useQuery(api.orders.getAllOrders, { clerkId });
+  const orders = useQuery(api.orders.getAllOrders, clerkId ? { clerkId } : "skip");
 
   const filteredOrders = orders?.filter((order) => {
     const matchesSearch =

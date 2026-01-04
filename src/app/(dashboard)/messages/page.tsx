@@ -17,22 +17,20 @@ import {
   MoreVertical,
   Loader2,
 } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
-interface MessagesPageProps {
-  clerkId: string;
-  userName: string;
-}
-
-export default function MessagesPage({ clerkId, userName }: MessagesPageProps) {
+export default function MessagesPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   const [selectedConversationId, setSelectedConversationId] = useState<Id<"conversations"> | null>(null);
   const [messageText, setMessageText] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const conversations = useQuery(api.chat.getConversations, { clerkId });
+  const conversations = useQuery(api.chat.getConversations, clerkId ? { clerkId } : "skip");
   const messages = useQuery(
     api.chat.getMessages,
-    selectedConversationId
+    selectedConversationId && clerkId
       ? { clerkId, conversationId: selectedConversationId }
       : "skip"
   );
@@ -45,7 +43,7 @@ export default function MessagesPage({ clerkId, userName }: MessagesPageProps) {
   );
 
   useEffect(() => {
-    if (selectedConversationId && messages) {
+    if (selectedConversationId && messages && clerkId) {
       markAsRead({ clerkId, conversationId: selectedConversationId });
     }
   }, [selectedConversationId, messages, clerkId, markAsRead]);

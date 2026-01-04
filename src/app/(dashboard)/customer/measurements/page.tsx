@@ -9,14 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MeasurementForm } from "@/components/measurements/measurement-form";
 import { Plus, Ruler, Edit, Star, Loader2 } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
-interface MeasurementsPageProps {
-	clerkId: string;
-}
-
-export default function MeasurementsPage({ clerkId }: MeasurementsPageProps) {
+export default function MeasurementsPage() {
+	const { user } = useUser();
+	const clerkId = user?.id ?? "";
 	const [showForm, setShowForm] = useState(false);
-	const profiles = useQuery(api.measurements.getMeasurementProfiles, { clerkId });
+	const profiles = useQuery(api.measurements.getMeasurementProfiles, clerkId ? { clerkId } : "skip");
 
 	if (profiles === undefined) {
 		return (
@@ -42,10 +41,7 @@ export default function MeasurementsPage({ clerkId }: MeasurementsPageProps) {
 			</div>
 
 			{showForm && (
-				<MeasurementForm
-					clerkId={clerkId}
-					onSuccess={() => setShowForm(false)}
-				/>
+				<MeasurementForm onSuccess={() => setShowForm(false)} />
 			)}
 
 			{profiles.length === 0 ? (

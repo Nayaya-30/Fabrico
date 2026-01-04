@@ -8,9 +8,9 @@ import { Badge } from "@/components/ui/badge";
 import { Ruler } from "lucide-react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
 
 interface MeasurementFormProps {
-  clerkId: string;
   onSuccess?: () => void;
 }
 
@@ -32,7 +32,9 @@ const measurementFields = [
   { key: "weight", label: "Weight (kg)", group: "full" },
 ];
 
-export function MeasurementForm({ clerkId, onSuccess }: MeasurementFormProps) {
+export function MeasurementForm({ onSuccess }: MeasurementFormProps) {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   const [profileName, setProfileName] = useState("");
   const [unit, setUnit] = useState<"cm" | "inch">("cm");
   const [measurements, setMeasurements] = useState<Record<string, number>>({});

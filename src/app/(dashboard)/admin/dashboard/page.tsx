@@ -2,6 +2,7 @@
 "use client";
 
 import { useQuery } from "convex/react";
+import { useUser } from "@clerk/nextjs";
 import { api } from "@/convex/_generated/api";
 import { AnalyticsDashboard } from "@/components/analytics/analytics-dashboard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,13 +17,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-interface AdminDashboardProps {
-  clerkId: string;
-  userName: string;
-}
-
-export default function AdminDashboard({ clerkId, userName }: AdminDashboardProps) {
-  const analytics = useQuery(api.analytics.getAdminAnalytics, { clerkId });
+export default function AdminDashboard() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
+  const analytics = useQuery(api.analytics.getAdminAnalytics, clerkId ? { clerkId } : "skip");
 
   return (
     <div className="space-y-6">
@@ -45,7 +43,7 @@ export default function AdminDashboard({ clerkId, userName }: AdminDashboardProp
       </div>
 
       {/* Analytics Dashboard */}
-      <AnalyticsDashboard clerkId={clerkId} />
+      {clerkId && <AnalyticsDashboard clerkId={clerkId} />}
 
       {/* Quick Actions */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">

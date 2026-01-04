@@ -11,12 +11,11 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Upload, X, Save } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 
-interface NewStylePageProps {
-  clerkId: string;
-}
-
-export default function NewStylePage({ clerkId }: NewStylePageProps) {
+export default function NewStylePage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   const router = useRouter();
   const createStyle = useMutation(api.styles.createStyle);
 

@@ -18,19 +18,17 @@ import {
 import Link from "next/link";
 import { OrderCard } from "@/components/orders/order-card";
 import { StyleCard } from "@/components/styles/style-card";
+import { useUser } from "@clerk/nextjs";
 
-interface CustomerDashboardProps {
-  clerkId: string;
-  userName: string;
-}
-
-export default function CustomerDashboard({ clerkId, userName }: CustomerDashboardProps) {
-  const orders = useQuery(api.orders.getCustomerOrders, { clerkId });
-  const savedStyles = useQuery(api.styles.getUserSavedStyles, { clerkId });
-  const notifications = useQuery(api.notifications.getNotifications, {
+export default function CustomerDashboard() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
+  const orders = useQuery(api.orders.getCustomerOrders, clerkId ? { clerkId } : "skip");
+  const savedStyles = useQuery(api.styles.getUserSavedStyles, clerkId ? { clerkId } : "skip");
+  const notifications = useQuery(api.notifications.getNotifications, clerkId ? {
     clerkId,
     limit: 5,
-  });
+  } : "skip");
 
   const activeOrders = orders?.filter(
     (o) => o.status !== "delivered" && o.status !== "cancelled"
@@ -45,7 +43,7 @@ export default function CustomerDashboard({ clerkId, userName }: CustomerDashboa
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-primary to-primary/70 rounded-lg p-8 text-primary-foreground">
         <h1 className="text-3xl font-heading font-bold mb-2">
-          Welcome back, {userName}! 👋
+          Welcome back, {user?.fullName || ""}! 👋
         </h1>
         <p className="text-lg opacity-90 mb-4">
           You have {activeOrders.length} active order{activeOrders.length !== 1 ? "s" : ""} in progress

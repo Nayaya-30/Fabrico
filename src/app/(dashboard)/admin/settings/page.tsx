@@ -6,21 +6,9 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Settings,
-  CreditCard,
-  Bell,
-  Shield,
-  Mail,
-  Save,
-  Check,
-} from "lucide-react";
+import { Settings, CreditCard, Bell, Shield, Mail, Save, Check } from "lucide-react";
 
-interface AdminSettingsPageProps {
-  clerkId: string;
-}
-
-export default function AdminSettingsPage({ clerkId }: AdminSettingsPageProps) {
+export default function AdminSettingsPage() {
   const [activeTab, setActiveTab] = useState("general");
   const [saved, setSaved] = useState(false);
 

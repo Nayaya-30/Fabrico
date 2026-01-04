@@ -9,15 +9,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Search, Award } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
-interface AdminWorkersPageProps {
-	clerkId: string;
-}
-
-export default function AdminWorkersPage({ clerkId }: AdminWorkersPageProps) {
+export default function AdminWorkersPage() {
+	const { user } = useUser();
+	const clerkId = user?.id ?? "";
 	const [searchQuery, setSearchQuery] = useState("");
-	const workers = useQuery(api.workers.getWorkers, { clerkId });
-	const workload = useQuery(api.workers.getWorkerWorkload, { clerkId });
+	const workers = useQuery(api.workers.getWorkers, clerkId ? { clerkId } : "skip");
+	const workload = useQuery(api.workers.getWorkerWorkload, clerkId ? { clerkId } : "skip");
 
 	const filteredWorkers = workers?.filter((worker) =>
 		worker.fullName.toLowerCase().includes(searchQuery.toLowerCase())

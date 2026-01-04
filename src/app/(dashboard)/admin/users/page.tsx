@@ -16,16 +16,15 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, UserPlus, Edit, Ban, Check } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
-interface UsersPageProps {
-  clerkId: string;
-}
-
-export default function UsersPage({ clerkId }: UsersPageProps) {
+export default function UsersPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<string>("all");
 
-  const users = useQuery(api.users.getAllUsers, { clerkId });
+  const users = useQuery(api.users.getAllUsers, clerkId ? { clerkId } : "skip");
   const updateRole = useMutation(api.auth.updateUserRole);
 
   const filteredUsers = users?.filter((user) => {

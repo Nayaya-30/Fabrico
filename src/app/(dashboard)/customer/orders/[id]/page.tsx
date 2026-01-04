@@ -18,20 +18,22 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 
 interface OrderDetailPageProps {
   params: { id: string };
-  clerkId: string;
 }
 
-export default function OrderDetailPage({ params, clerkId }: OrderDetailPageProps) {
+export default function OrderDetailPage({ params }: OrderDetailPageProps) {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [rating, setRating] = useState(5);
 
-  const order = useQuery(api.orders.getOrderById, {
+  const order = useQuery(api.orders.getOrderById, clerkId ? {
     clerkId,
     orderId: params.id as Id<"orders">,
-  });
+  } : "skip");
 
   if (order === undefined) {
     return (

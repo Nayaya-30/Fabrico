@@ -3,6 +3,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,15 +17,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-interface ManagerDashboardProps {
-  clerkId: string;
-  userName: string;
-}
-
-export default function ManagerDashboard({ clerkId, userName }: ManagerDashboardProps) {
-  const orders = useQuery(api.orders.getAllOrders, { clerkId });
-  const workload = useQuery(api.workers.getWorkerWorkload, { clerkId });
-  const huddles = useQuery(api.huddles.getHuddles, { clerkId, limit: 5 });
+export default function ManagerDashboard() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
+  const userName = user?.fullName ?? "";
+  const orders = useQuery(api.orders.getAllOrders, clerkId ? { clerkId } : "skip");
+  const workload = useQuery(api.workers.getWorkerWorkload, clerkId ? { clerkId } : "skip");
+  const huddles = useQuery(api.huddles.getHuddles, clerkId ? { clerkId, limit: 5 } : "skip");
 
   const activeOrders = orders?.filter(
     (o) => o.status !== "delivered" && o.status !== "cancelled"

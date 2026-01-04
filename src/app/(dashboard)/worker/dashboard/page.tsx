@@ -15,17 +15,15 @@ import {
   Trophy,
 } from "lucide-react";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
-interface WorkerDashboardProps {
-  clerkId: string;
-  userName: string;
-}
-
-export default function WorkerDashboard({ clerkId, userName }: WorkerDashboardProps) {
-  const user = useQuery(api.auth.getCurrentUser, { clerkId });
-  const assignedOrders = useQuery(api.orders.getWorkerAssignedOrders, { clerkId });
-  const workerProfile = useQuery(api.workers.getWorkerProfile, { clerkId });
-  const huddles = useQuery(api.huddles.getHuddles, { clerkId, limit: 5 });
+export default function WorkerDashboard() {
+  const { user: clerkUser } = useUser();
+  const clerkId = clerkUser?.id ?? "";
+  const user = useQuery(api.auth.getCurrentUser, clerkId ? { clerkId } : "skip");
+  const assignedOrders = useQuery(api.orders.getWorkerAssignedOrders, clerkId ? { clerkId } : "skip");
+  const workerProfile = useQuery(api.workers.getWorkerProfile, clerkId ? { clerkId } : "skip");
+  const huddles = useQuery(api.huddles.getHuddles, clerkId ? { clerkId, limit: 5 } : "skip");
 
   const activeOrders = assignedOrders?.filter(
     (o) => o.status !== "delivered" && o.status !== "cancelled"
@@ -42,7 +40,7 @@ export default function WorkerDashboard({ clerkId, userName }: WorkerDashboardPr
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-primary to-primary/70 rounded-lg p-8 text-primary-foreground">
         <h1 className="text-3xl font-heading font-bold mb-2">
-          Good day, {userName}! 👋
+          Good day, {clerkUser?.fullName || user?.fullName || ""}! 👋
         </h1>
         <p className="text-lg opacity-90 mb-4">
           You have {activeOrders.length} active assignment{activeOrders.length !== 1 ? "s" : ""}

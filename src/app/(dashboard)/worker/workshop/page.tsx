@@ -7,13 +7,12 @@ import { api } from "@/convex/_generated/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MessageSquare } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
-interface WorkerWorkshopPageProps {
-  clerkId: string;
-}
-
-export default function WorkerWorkshopPage({ clerkId }: WorkerWorkshopPageProps) {
-  const huddles = useQuery(api.huddles.getHuddles, { clerkId });
+export default function WorkerWorkshopPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
+  const huddles = useQuery(api.huddles.getHuddles, clerkId ? { clerkId } : "skip");
 
   return (
     <div className="space-y-6">

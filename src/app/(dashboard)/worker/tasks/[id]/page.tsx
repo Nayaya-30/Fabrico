@@ -11,20 +11,22 @@ import { Badge } from "@/components/ui/badge";
 import { OrderProgressTracker } from "@/components/orders/order-progress-tracker";
 import { ArrowLeft, Upload } from "lucide-react";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
 interface TaskDetailPageProps {
   params: { id: string };
-  clerkId: string;
 }
 
-export default function TaskDetailPage({ params, clerkId }: TaskDetailPageProps) {
+export default function TaskDetailPage({ params }: TaskDetailPageProps) {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   const [notes, setNotes] = useState("");
   const [selectedStage, setSelectedStage] = useState<string>("");
 
-  const order = useQuery(api.orders.getOrderById, {
+  const order = useQuery(api.orders.getOrderById, clerkId ? {
     clerkId,
     orderId: params.id as Id<"orders">,
-  });
+  } : "skip");
 
   const updateProgress = useMutation(api.orders.updateOrderProgress);
 

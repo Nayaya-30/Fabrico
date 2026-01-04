@@ -11,14 +11,13 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Plus, Edit, Trash2, Eye, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
-interface AdminStylesPageProps {
-  clerkId: string;
-}
-
-export default function AdminStylesPage({ clerkId }: AdminStylesPageProps) {
+export default function AdminStylesPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   const [searchQuery, setSearchQuery] = useState("");
-  const styles = useQuery(api.styles.getStyles, { clerkId });
+  const styles = useQuery(api.styles.getStyles, clerkId ? { clerkId } : "skip");
   const deleteStyle = useMutation(api.styles.deleteStyle);
 
   const filteredStyles = styles?.filter((style) =>

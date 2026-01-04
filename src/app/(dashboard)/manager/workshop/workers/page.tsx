@@ -8,14 +8,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Award } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
-interface WorkersListPageProps {
-  clerkId: string;
-}
-
-export default function WorkersListPage({ clerkId }: WorkersListPageProps) {
-  const workers = useQuery(api.workers.getWorkers, { clerkId });
-  const workload = useQuery(api.workers.getWorkerWorkload, { clerkId });
+export default function WorkersListPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
+  const workers = useQuery(api.workers.getWorkers, clerkId ? { clerkId } : "skip");
+  const workload = useQuery(api.workers.getWorkerWorkload, clerkId ? { clerkId } : "skip");
 
   return (
     <div className="space-y-6">

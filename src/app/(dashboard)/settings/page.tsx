@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { useUser } from "@clerk/nextjs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,19 +20,17 @@ import {
   Check,
 } from "lucide-react";
 
-interface SettingsPageProps {
-  clerkId: string;
-}
-
-export default function SettingsPage({ clerkId }: SettingsPageProps) {
+export default function SettingsPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
   const [activeTab, setActiveTab] = useState("profile");
-  const user = useQuery(api.auth.getCurrentUser, { clerkId });
+  const currentUser = useQuery(api.auth.getCurrentUser, clerkId ? { clerkId } : "skip");
   const updatePreferences = useMutation(api.auth.updateUserPreferences);
 
   const [notifications, setNotifications] = useState({
-    email: user?.preferences.notifications.email ?? true,
-    sms: user?.preferences.notifications.sms ?? true,
-    whatsapp: user?.preferences.notifications.whatsapp ?? true,
+    email: currentUser?.preferences.notifications.email ?? true,
+    sms: currentUser?.preferences.notifications.sms ?? true,
+    whatsapp: currentUser?.preferences.notifications.whatsapp ?? true,
   });
 
   const [saved, setSaved] = useState(false);
@@ -100,24 +99,24 @@ export default function SettingsPage({ clerkId }: SettingsPageProps) {
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-20 w-20 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-2xl font-bold">
-                    {user?.fullName.charAt(0).toUpperCase()}
+                    {currentUser?.fullName.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p className="font-semibold text-lg">{user?.fullName}</p>
+                    <p className="font-semibold text-lg">{currentUser?.fullName}</p>
                     <Badge variant="default" className="mt-1">
-                      {user?.role}
+                      {currentUser?.role}
                     </Badge>
                   </div>
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium mb-2">Full Name</label>
-                  <Input defaultValue={user?.fullName} />
+                  <Input defaultValue={currentUser?.fullName} />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium mb-2">Email</label>
-                  <Input defaultValue={user?.email} disabled />
+                  <Input defaultValue={currentUser?.email} disabled />
                   <p className="text-xs text-muted-foreground mt-1">
                     Email cannot be changed
                   </p>
@@ -125,7 +124,7 @@ export default function SettingsPage({ clerkId }: SettingsPageProps) {
 
                 <div>
                   <label className="block text-sm font-medium mb-2">Phone Number</label>
-                  <Input defaultValue={user?.phone} placeholder="+234 XXX XXX XXXX" />
+                  <Input defaultValue={currentUser?.phone} placeholder="+234 XXX XXX XXXX" />
                 </div>
 
                 <Button>

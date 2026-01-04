@@ -8,13 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CreditCard, DollarSign, TrendingUp, Clock } from "lucide-react";
+import { useUser } from "@clerk/nextjs";
 
-interface AdminPaymentsPageProps {
-  clerkId: string;
-}
-
-export default function AdminPaymentsPage({ clerkId }: AdminPaymentsPageProps) {
-  const analytics = useQuery(api.analytics.getAdminAnalytics, { clerkId });
+export default function AdminPaymentsPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
+  const analytics = useQuery(api.analytics.getAdminAnalytics, clerkId ? { clerkId } : "skip");
 
   return (
     <div className="space-y-6">

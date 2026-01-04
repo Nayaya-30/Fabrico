@@ -9,14 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
-interface WorkshopPageProps {
-  clerkId: string;
-}
-
-export default function WorkshopPage({ clerkId }: WorkshopPageProps) {
-  const workload = useQuery(api.workers.getWorkerWorkload, { clerkId });
-  const huddles = useQuery(api.huddles.getHuddles, { clerkId });
+export default function WorkshopPage() {
+  const { user } = useUser();
+  const clerkId = user?.id ?? "";
+  const workload = useQuery(api.workers.getWorkerWorkload, clerkId ? { clerkId } : "skip");
+  const huddles = useQuery(api.huddles.getHuddles, clerkId ? { clerkId } : "skip");
 
   return (
     <div className="space-y-6">
