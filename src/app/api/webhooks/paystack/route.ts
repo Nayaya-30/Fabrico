@@ -1,37 +1,44 @@
-
-// app/api/webhooks/paystack/route.ts
-import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { NextRequest, NextResponse } from "next/server";
+
+export const runtime = "nodejs";
+
+function safeCompareHex(expectedHex: string, providedHex: string): boolean {
+  const expected = Buffer.from(expectedHex, "hex");
+  const provided = Buffer.from(providedHex, "hex");
+
+  if (expected.length === 0 || provided.length === 0 || expected.length !== provided.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(expected, provided);
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.text();
-    const signature = req.headers.get("x-paystack-signature");
+    const secret = process.env.PAYSTACK_SECRET_KEY;
+    if (!secret) {
+      console.error("PAYSTACK_SECRET_KEY is not configured");
+      return NextResponse.json({ error: "Webhook unavailable" }, { status: 503 });
+    }
 
-    // Verify webhook signature
-    const hash = crypto
-      .createHmac("sha512", process.env.PAYSTACK_SECRET_KEY!)
-      .update(body)
-      .digest("hex");
+    const payload = await req.text();
+    const signature = req.headers.get("x-paystack-signature") ?? "";
 
-    if (hash !== signature) {
+    const digest = crypto.createHmac("sha512", secret).update(payload).digest("hex");
+    if (!safeCompareHex(digest, signature)) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
-    const event = JSON.parse(body);
+    const event = JSON.parse(payload) as { event?: string; data?: unknown };
 
-    // Handle different event types
     switch (event.event) {
       case "charge.success":
-        // Update payment status in Convex
         console.log("Payment successful:", event.data);
         break;
-
       case "charge.failed":
-        // Handle failed payment
         console.log("Payment failed:", event.data);
         break;
-
       default:
         console.log("Unhandled event:", event.event);
     }
@@ -39,9 +46,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error("Webhook error:", error);
-    return NextResponse.json(
-      { error: "Webhook handler failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Webhook handler failed" }, { status: 500 });
   }
 }

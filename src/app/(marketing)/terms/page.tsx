@@ -1,69 +1,54 @@
+import { Card, CardContent } from "@/components/ui/card";
 
-// app/(marketing)/terms/page.tsx
+const sections = [
+  {
+    title: "1. Acceptance of terms",
+    body: "By accessing and using Fabrico, you agree to these terms and our platform usage standards.",
+  },
+  {
+    title: "2. License",
+    body: "We grant you a limited, non-transferable license to use Fabrico for tailoring business operations.",
+  },
+  {
+    title: "3. Account responsibilities",
+    body: "You are responsible for account security, user permissions, and all actions performed by your team.",
+  },
+  {
+    title: "4. Billing",
+    body: "Subscriptions are billed in advance on a monthly or annual basis, subject to local legal requirements.",
+  },
+  {
+    title: "5. Service limitations",
+    body: "Fabrico is provided as-is and we are not liable for indirect or consequential damages to the extent permitted by law.",
+  },
+  {
+    title: "6. Termination",
+    body: "We may suspend or terminate accounts that violate platform rules, security policies, or applicable law.",
+  },
+  {
+    title: "7. Contact",
+    body: "For legal questions, contact legal@fabrico.app.",
+  },
+];
+
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto px-4 py-20">
-        <h1 className="text-4xl font-heading font-bold mb-8">Terms & Conditions</h1>
-        
-        <div className="prose prose-gray max-w-none space-y-6">
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>
-            <p className="text-muted-foreground">
-              By accessing and using Tailoring Pro, you accept and agree to be bound by the
-              terms and provision of this agreement.
-            </p>
-          </section>
+    <section className="mx-auto w-full max-w-5xl px-4 py-16 sm:px-6 lg:px-10">
+      <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">Terms & Conditions</h1>
+      <p className="mt-4 max-w-3xl text-muted-foreground">
+        These terms govern your use of Fabrico products and services. Please review regularly as they may be updated.
+      </p>
 
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">2. Use License</h2>
-            <p className="text-muted-foreground">
-              Permission is granted to temporarily use Tailoring Pro for personal or
-              commercial tailoring business purposes. This is the grant of a license, not a
-              transfer of title.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">3. User Responsibilities</h2>
-            <p className="text-muted-foreground">
-              Users are responsible for maintaining the confidentiality of their account
-              information and for all activities that occur under their account.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">4. Payment Terms</h2>
-            <p className="text-muted-foreground">
-              Subscription fees are billed in advance on a monthly or annual basis. All
-              payments are non-refundable except as required by law.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">5. Limitation of Liability</h2>
-            <p className="text-muted-foreground">
-              Tailoring Pro shall not be liable for any indirect, incidental, special,
-              consequential or punitive damages resulting from your use of the service.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">6. Termination</h2>
-            <p className="text-muted-foreground">
-              We may terminate or suspend your account immediately, without prior notice,
-              for any reason whatsoever, including without limitation if you breach the Terms.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">7. Contact Information</h2>
-            <p className="text-muted-foreground">
-              For questions about these Terms, please contact us at legal@tailoringpro.com
-            </p>
-          </section>
-        </div>
+      <div className="mt-8 space-y-4">
+        {sections.map((section) => (
+          <Card key={section.title} className="border-border/70">
+            <CardContent className="p-6">
+              <h2 className="text-xl font-semibold">{section.title}</h2>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{section.body}</p>
+            </CardContent>
+          </Card>
+        ))}
       </div>
-    </div>
+    </section>
   );
 }
